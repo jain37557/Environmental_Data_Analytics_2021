@@ -104,6 +104,7 @@ A quick note: in many situations, a `=` sign will substitute for a `<-`. Resist 
 
 ```{r}
 x <- 3*4
+y<- 2
 ```
 Now, call up the object `x`. Notice that `x` has also just shown up in your Environment tab. 
 ```{r}
