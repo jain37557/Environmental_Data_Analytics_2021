@@ -23,14 +23,18 @@ The completed exercise is due on <>.
 
 1. Check your working directory, load necessary packages (tidyverse), and upload two datasets: the ECOTOX neonicotinoid dataset (ECOTOX_Neonicotinoids_Insects_raw.csv) and the Niwot Ridge NEON dataset for litter and woody debris (NEON_NIWO_Litter_massdata_2018-08_raw.csv). Name these datasets "Neonics" and "Litter", respectively. 
 ```{r,  message = FALSE}
-
+library(dplyr)
+library(ggplot2)
+library(tidyverse)
+Neonics <- read.csv("../Data/Raw/ECOTOX_Neonicotinoids_Insects_raw.csv")
+Litter <- read.csv("../Data/Raw/NEON_NIWO_Litter_massdata_2018-08_raw.csv")
 ```
 
 ## Learn about your system
 
 2. The neonicotinoid dataset was collected from the Environmental Protection Agency's ECOTOX Knowledgebase, a database for ecotoxicology research. Neonicotinoids are a class of insecticides used widely in agriculture. The dataset that has been pulled includes all studies published on insects. Why might we be interested in the ecotoxicologoy of neonicotinoids on insects? Feel free to do a brief internet search if you feel you need more background information. 
 
-> Answer: 
+> Answer: Since there is nicotine in it idk? 
 
 3. The Niwot Ridge litter and woody debris dataset was collected from the National Ecological Observatory Network, which collectively includes 81 aquatic and terrestrial sites across 20 ecoclimatic domains. 32 of these sites sample forest litter and woody debris, and we will focus on the Niwot Ridge long-term ecological research (LTER) station in Colorado. Why might we be interested in studying litter and woody debris that falls to the ground in forests? Feel free to do a brief internet search if you feel you need more background information. 
 
@@ -50,12 +54,14 @@ The completed exercise is due on <>.
 5. What are the dimensions of the dataset?
 
 ```{r}
-
+dim(Neonics)
 ```
 
 6. Using the `summary` function on the "Effects" column, determine the most common effects that are studied. Why might these effects specifically be of interest?
 ```{r}
-
+summary(Neonics$Effect)
+table(Neonics$Effect)
+summary(Neonics$Effect.Measurement)
 ```
 
 > Answer: 
@@ -63,7 +69,8 @@ The completed exercise is due on <>.
 7. Using the `summary` function, determine the six most commonly studied species in the dataset (common name). What do these species have in common, and why might they be of interest over other insects? Feel free to do a brief internet search for more information if needed.
 
 ```{r}
-
+table(Neonics$Species.Scientific.Name)
+sort(table(Neonics$Species.Scientific.Name),decreasing = TRUE)
 ```
 
 > Answer: 
@@ -113,7 +120,7 @@ Interpret this graph. What are the most common test locations, and do they diffe
 13. Using the `unique` function, determine how many plots were sampled at Niwot Ridge. How is the information obtained from `unique` different from that obtained from `summary`?
 
 ```{r}
-
+p<- unique(Litter$plotID)
 ```
 
 > Answer: 
