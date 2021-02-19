@@ -138,7 +138,7 @@ print(lightvsDO)
 lightvsDOfixed <- 
   ggplot(PeterPaul.chem.nutrients, aes(x = irradianceWater, y = dissolvedOxygen)) +
   geom_point() +
-  xlim(0, 250) +
+  xlim(0, 2500) +
   ylim(0, 20)
 print(lightvsDOfixed)
 
@@ -150,7 +150,7 @@ tempvsdepth <-
   scale_y_reverse()
 print(tempvsdepth)
 
-NvsP <-
+ NvsP <-
   ggplot(PeterPaul.chem.nutrients, aes(x = tp_ug, y = tn_ug, color = depth)) +
   geom_point() +
   geom_smooth(method = lm) +
@@ -199,6 +199,7 @@ print(Nutrientplot6)
 Nutrientplot7 <-   
   ggplot(PeterPaul.chem.nutrients.gathered) +
   geom_freqpoly(aes(x = concentration, color = nutrient))
+
 print(Nutrientplot7)
 
 # Frequency polygons have the risk of becoming spaghetti plots. 
