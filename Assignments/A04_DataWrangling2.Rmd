@@ -1,6 +1,6 @@
 ---
 title: "Assignment 4: Data Wrangling"
-author: "Abhishek Sanjay Jain"
+author: "Natalia Jaffee"
 output: pdf_document
 geometry: margin=2.54cm
 ---
@@ -27,13 +27,30 @@ The completed exercise is due on Tuesday, Feb 16 @ 11:59pm.
 #1
 library(tidyverse)
 library(lubridate)
+O3.2018<-read.csv('../Data/Raw/EPAair_O3_NC2018_raw.csv', stringsAsFactors = TRUE)
+O3.2019<-read.csv("../Data/Raw/EPAair_O3_NC2019_raw.csv", stringsAsFactors = TRUE)
+PM25.2018<-read.csv("../Data/Raw/EPAair_PM25_NC2018_raw.csv", stringsAsFactors = TRUE)
+PM25.2019<-read.csv("../Data/Raw/EPAair_PM25_NC2019_raw.csv", stringsAsFactors = TRUE)
 #2
-epa.ozone.2018 <- read.csv('../Data/Raw/EPAair_O3_NC2018_raw.csv')
-epa.ozone.2019 <- read.csv('../Data/Raw/EPAair_O3_NC2019_raw.csv')
-epa.pm.2018 <- read.csv('../Data/Raw/EPAair_PM25_NC2018_raw.csv')
-epa.pm.2019 <- read.csv('../Data/Raw/EPAair_PM25_NC2019_raw.csv')
-dim(epa.ozone.2018)
-colnames(epa.ozone.2018)
+  #O3 2018
+colnames(O3.2018)
+str(O3.2018)
+dim(O3.2018)
+
+  #O3 2019
+colnames(O3.2019)
+str(O3.2019)
+dim(O3.2019)
+
+  #PM25 2018
+colnames(PM25.2018)
+str(PM25.2018)
+dim(PM25.2018)
+
+  #PM 2019
+colnames(PM25.2019)
+str(PM25.2019)
+dim(PM25.2019)
 ```
 
 ## Wrangle individual datasets to create processed files.
@@ -44,33 +61,38 @@ colnames(epa.ozone.2018)
 
 ```{r}
 #3
-epa.ozone.2018$Date <- as.Date(epa.ozone.2018$Date,format="%m/%d/%Y")
-epa.ozone.2019$Date <- as.Date(epa.ozone.2019$Date,format="%m/%d/%Y")
-epa.pm.2018$Date <- as.Date(epa.pm.2018$Date,format="%m/%d/%Y")
-epa.pm.2019$Date <- as.Date(epa.pm.2019$Date,format="%m/%d/%Y")
+O3.2018$Date<-as.Date(O3.2018$Date, format = "%m/%d/%Y")
+O3.2019$Date<-as.Date(O3.2019$Date, format = "%m/%d/%y")
+PM25.2018$Date<-as.Date(PM25.2018$Date, format = "%m/%d/%y")
+PM25.2019$Date<-as.Date(PM25.2019$Date, format = "%m/%d/%y")
+
 #4
-epa.ozone.2018.select <- select(epa.ozone.2018,Date,DAILY_AQI_VALUE,Site.Name, AQS_PARAMETER_DESC, COUNTY, SITE_LATITUDE, SITE_LONGITUDE)
-epa.ozone.2019.select <- select(epa.ozone.2019,Date,DAILY_AQI_VALUE,Site.Name, AQS_PARAMETER_DESC, COUNTY, SITE_LATITUDE, SITE_LONGITUDE)
-epa.pm.2018.select <- select(epa.pm.2018,Date,DAILY_AQI_VALUE,Site.Name, AQS_PARAMETER_DESC, COUNTY, SITE_LATITUDE, SITE_LONGITUDE)
-epa.pm.2019.select <-select(epa.pm.2019,Date,DAILY_AQI_VALUE,Site.Name, AQS_PARAMETER_DESC, COUNTY, SITE_LATITUDE, SITE_LONGITUDE)
+O3.2018.proc<- O3.2018 %>%
+  select(Date, DAILY_AQI_VALUE, Site.Name, AQS_PARAMETER_DESC,     COUNTY, SITE_LATITUDE, SITE_LONGITUDE)
+O3.2019.proc<- O3.2019 %>%
+  select(Date, DAILY_AQI_VALUE, Site.Name, AQS_PARAMETER_DESC, COUNTY, SITE_LATITUDE, SITE_LONGITUDE)
+PM25.2018.proc<- PM25.2018 %>%
+  select(Date, DAILY_AQI_VALUE, Site.Name, AQS_PARAMETER_DESC, COUNTY, SITE_LATITUDE, SITE_LONGITUDE)
+PM25.2019.proc<- PM25.2019 %>%
+  select(Date, DAILY_AQI_VALUE, Site.Name, AQS_PARAMETER_DESC, COUNTY, SITE_LATITUDE, SITE_LONGITUDE)
+
+na.omit(O3.2018.proc, O3.2019.proc, PM25.2018.proc, PM25.2019.proc)
 #5
-epa.pm.2018.select<-mutate(epa.pm.2018.select,AQS_PARAMETER_DESC="PM2.5")
-epa.pm.2019.select<-mutate(epa.pm.2019.select,AQS_PARAMETER_DESC="PM2.5")
+
+PM25.2018.proc<- mutate(PM25.2018.proc, AQS_PARAMETER_DESC = "PM2.5")
+PM25.2019.proc<- mutate(PM25.2019.proc, AQS_PARAMETER_DESC = "PM2.5")
+
 #6
-write.csv(epa.ozone.2018.select, row.names = FALSE, 
-          file = "../Data/Processed/EPAair_O3_NC2018_Processed.csv")
-write.csv(epa.ozone.2019.select, row.names = FALSE, 
-          file = "../Data/Processed/EPAair_O3_NC2019_Processed.csv")
-write.csv(epa.pm.2018.select, row.names = FALSE, 
-          file = "../Data/Processed/EPAair_PM25_NC2018_Processed.csv")
-write.csv(epa.pm.2019.select, row.names = FALSE, 
-          file = "../Data/Processed/EPAair_PM25_NC2019_Processed.csv")
+write.csv(O3.2018.proc, row.names = FALSE, file="../Data/Processed/EPAair_O3_NC2018_processed.csv")
+write.csv(O3.2019.proc, row.names = FALSE, file="../Data/Processed/EPAair_O3_NC2019_processed.csv")
+write.csv(PM25.2018.proc, row.names = FALSE, file="../Data/Processed/EPAair_PM25_NC2018_processed.csv")
+write.csv(PM25.2019.proc, row.names = FALSE, file="../Data/Processed/EPAair_PM25_NC2019_processed.csv")
+
 ```
 
 
 ## Combine datasets
-7. Combine the four datasets with `rbind`. Make sure your column names are identical prior to running this code.
-
+7. Combine the four datasets with `rbind`. Make sure your column names are identical prior to running this code. 
 8. Wrangle your new dataset with a pipe function (%>%) so that it fills the following conditions: 
 
 * Include all sites that the four data frames have in common: "Linville Falls", "Durham Armory", "Leggett", "Hattie Avenue", "Clemmons Middle", "Mendenhall School", "Frying Pan Mountain", "West Johnston Co.", "Garinger High School", "Castle Hayne", "Pitt Agri. Center", "Bryson City", "Millbrook School" (the function `intersect` can figure out common factor levels)
@@ -82,32 +104,33 @@ write.csv(epa.pm.2019.select, row.names = FALSE,
 10. Call up the dimensions of your new tidy dataset.
 11. Save your processed dataset with the following file name: "EPAair_O3_PM25_NC1718_Processed.csv"
 
-```{r,message= FALSE}
+```{r}
 #7
-all.data <- rbind(epa.ozone.2018.select,epa.ozone.2019.select,epa.pm.2018.select,epa.pm.2019.select)
-common1<-intersect(epa.ozone.2018.select$Site.Name,epa.ozone.2019.select$Site.Name)
-common2<-intersect(common1,epa.pm.2018.select$Site.Name)
-all.common.sites<-intersect(common2,epa.pm.2019.select$Site.Name)
-all.common.sites<-all.common.sites[-13]
-all.common.sites
-dim(all.data)
-#8
-all.pipe <-
-  all.data %>%
-  filter(Site.Name=="Linville Falls" | Site.Name=="Durham Armory" | Site.Name=="Leggett"| Site.Name== "Hattie Avenue"|Site.Name== "Clemmons Middle"| Site.Name=="Mendenhall School"|Site.Name== "Frying Pan Mountain"|Site.Name== "West Johnston Co."|Site.Name== "Garinger High School"|Site.Name=="Castle Hayne"|Site.Name=="Pitt Agri. Center"|Site.Name== "Bryson City"|Site.Name=="Millbrook School") %>%
-  group_by(Date, Site.Name, AQS_PARAMETER_DESC, COUNTY) %>%
-  summarise(mean_DAILY_AQI_VALUE=mean(DAILY_AQI_VALUE),mean_SITE_LATITUDE=mean(SITE_LATITUDE),mean_SITE_LONGITUDE=mean(SITE_LONGITUDE)) %>%
-  mutate(Month=month(Date)) %>%
-  mutate(Year= year(Date))
+EPAair <- rbind(O3.2018.proc, O3.2019.proc, PM25.2018.proc, PM25.2019.proc)
 
-dim(all.pipe)
+#8
+EPAair.proc <- EPAair %>%
+  filter(Site.Name %in% c("Linville Falls", "Durham Armory", "Leggett", 
+                        "Hattie Avenue", "Clemmons Middle", "Mendenhall School", 
+                        "Frying Pan Mountain", "West Johnston Co.", "Garinger High School", 
+                        "Castle Hayne", "Pitt Agri. Center", "Bryson City", "Millbrook School")) %>%
+group_by(Date, Site.Name, AQS_PARAMETER_DESC, COUNTY) %>%
+  summarise(meanAQI = mean(DAILY_AQI_VALUE), 
+            meanLatitude = mean(SITE_LATITUDE), 
+            meanLongitude = mean(SITE_LONGITUDE))%>%
+  mutate(month = month(Date)) %>%
+  mutate(year= year(Date))
+            
+
+
+
 
 #9
-All.spread<- pivot_wider(all.pipe, names_from = AQS_PARAMETER_DESC, values_from = mean_DAILY_AQI_VALUE)
+
 #10
-dim(All.spread)
+
 #11
-write.csv(All.spread, row.names = FALSE, file="../Data/Processed/EPAair_O3_PM25_NC1718_Processed.csv")
+
 ```
 
 
@@ -118,11 +141,7 @@ write.csv(All.spread, row.names = FALSE, file="../Data/Processed/EPAair_O3_PM25_
 
 ```{r}
 #12a
-All.spread.summaries<-
-  All.spread %>%
-  group_by(Site.Name, Month, Year) %>%
-  summarise(mean_Ozone=mean(Ozone),meand_PM2.5=mean(PM2.5)) %>%
-  drop_na(Month, Year)
+
 #12b
 
 #13

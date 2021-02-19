@@ -26,8 +26,8 @@ The completed exercise is due on <>.
 library(dplyr)
 library(ggplot2)
 library(tidyverse)
-Neonics <- read.csv("../Data/Raw/ECOTOX_Neonicotinoids_Insects_raw.csv")
-Litter <- read.csv("../Data/Raw/NEON_NIWO_Litter_massdata_2018-08_raw.csv")
+Neonics <- read.csv("../Data/Raw/ECOTOX_Neonicotinoids_Insects_raw.csv",stringsAsFactors = TRUE)
+Litter <- read.csv("../Data/Raw/NEON_NIWO_Litter_massdata_2018-08_raw.csv",stringsAsFactors = TRUE)
 ```
 
 ## Learn about your system
@@ -36,8 +36,7 @@ Litter <- read.csv("../Data/Raw/NEON_NIWO_Litter_massdata_2018-08_raw.csv")
 
 > Answer: Since there is nicotine in it idk? 
 
-3. The Niwot Ridge litter and woody debris dataset was collected from the National Ecological Observatory Network, which collectively includes 81 aquatic and terrestrial sites across 20 ecoclimatic domains. 32 of these sites sample forest litter and woody debris, and we will focus on the Niwot Ridge long-term ecological research (LTER) station in Colorado. Why might we be interested in studying litter and woody debris that falls to the ground in forests? Feel free to do a brief internet search if you feel you need more background information. 
-
+3. The Niwot Ridge litter and woody debris dataset was collected from the National Ecological Observatory Network, which collectively includes 81 aquatic and terrestrial sites across 20 ecoclimatic domains. 32 of these sites sample forest litter and woody debris, and we will focus on the Niwot Ridge long-term ecological research (LTER) station in Colorado. Why might we be interested in studying litter and woody debris that falls to the ground in forests? Feel free to do a brief internet search if you feel you need more background information.
 > Answer: 
 
 4. How is litter and woody debris sampled as part of the NEON network? Read the NEON_Litterfall_UserGuide.pdf document to learn more. List three pieces of salient information about the sampling methods here: 
@@ -60,8 +59,6 @@ dim(Neonics)
 6. Using the `summary` function on the "Effects" column, determine the most common effects that are studied. Why might these effects specifically be of interest?
 ```{r}
 summary(Neonics$Effect)
-table(Neonics$Effect)
-summary(Neonics$Effect.Measurement)
 ```
 
 > Answer: 
@@ -69,7 +66,6 @@ summary(Neonics$Effect.Measurement)
 7. Using the `summary` function, determine the six most commonly studied species in the dataset (common name). What do these species have in common, and why might they be of interest over other insects? Feel free to do a brief internet search for more information if needed.
 
 ```{r}
-table(Neonics$Species.Scientific.Name)
 sort(table(Neonics$Species.Scientific.Name),decreasing = TRUE)
 ```
 
@@ -78,7 +74,7 @@ sort(table(Neonics$Species.Scientific.Name),decreasing = TRUE)
 8. Concentrations are always a numeric value. What is the class of Conc.1..Author. in the dataset, and why is it not numeric?
 
 ```{r}
-
+class(Neonics$Conc.1..Author.)
 ```
 
 > Answer:
@@ -89,12 +85,18 @@ sort(table(Neonics$Species.Scientific.Name),decreasing = TRUE)
 
 9. Using `geom_freqpoly`, generate a plot of the number of studies conducted by publication year. 
 ```{r}
-
+ggplot(Neonics) +
+  geom_freqpoly(aes(x=Publication.Year),bins=50) + 
+  scale_x_continuous()+
+  labs(x="Publication Year",y="Number of Studies")
 ```
 
 10. Reproduce the same graph but now add a color aesthetic so that different Test.Location are displayed as different colors.
 ```{r}
-
+ggplot(Neonics) +
+  geom_freqpoly(aes(x=Publication.Year,color=Test.Location),bins=50) + 
+  scale_x_continuous()+
+  labs(x="Publication Year",y="Number of Studies")
 ```
 
 Interpret this graph. What are the most common test locations, and do they differ over time?
@@ -104,7 +106,9 @@ Interpret this graph. What are the most common test locations, and do they diffe
 11. Create a bar graph of Endpoint counts. What are the two most common end points, and how are they defined? Consult the ECOTOX_CodeAppendix for more information. 
 
 ```{r}
-
+ggplot(Neonics)+
+  geom_bar(aes(x=Endpoint))+
+  coord_flip() #optional
 ```
 
 > Answer: 
@@ -114,13 +118,16 @@ Interpret this graph. What are the most common test locations, and do they diffe
 
 12. Determine the class of collectDate. Is it a date? If not, change to a date and confirm the new class of the variable. Using the `unique` function, determine which dates litter was sampled in August 2018. 
 ```{r}
-
+class(Litter$collectDate)
+Litter$collectDate<- as.Date(Litter$collectDate, format="%Y-%m-%d")
+class(Litter$collectDate)
 ```
 
 13. Using the `unique` function, determine how many plots were sampled at Niwot Ridge. How is the information obtained from `unique` different from that obtained from `summary`?
 
 ```{r}
 p<- unique(Litter$plotID)
+length(p)
 ```
 
 > Answer: 
